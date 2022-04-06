@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Blog | Home</title>
+        <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        gridTemplateColumns: {
+                            'fit': 'repeat(auto-fit, minmax(330px, 1fr))'
+                        },
+                        colors: {
+                            transparent: "transparent",
+                            purple: "#645ADF",
+                            "soft-black": "#4E4E4E",
+                            "active-black": "#313131",
+                            "soft-gray": "#adadad",
+                            "form-bg": "#efefef",
+                        },
+                    },
+                },
+                corePlugins: {
+                    aspectRatio: false,
+                },
+            };
+        </script>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+            * {
+                font-family: "Poppins", sans-serif;
+            }
+        </style>
+    </head>
+    <body class="">
+        {% block content %}{% endblock %}
+    </body>
+</html>

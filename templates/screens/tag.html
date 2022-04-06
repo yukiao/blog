@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% with active='tag'%}
+        {% include 'components/header.html'%}
+    {% endwith %}
+    <main class="w-4/5 mx-auto">
+        <div class="mt-[128px] py-10">
+            <h1 class="font-bold text-4xl text-active-black">
+                Tag
+            </h1>
+            <ul class="flex justify-center space-x-10 py-10 items-center flex-wrap w-full">
+                <li class="font-bold text-purple bg-[#645adf1a] py-2 px-5 rounded-md">All</li>
+                <li class="text-soft-black">Tips</li>
+                <li class="text-soft-black">Python</li>
+                <li class="text-soft-black">JS</li>
+            </ul>
+
+            <div class="grid grid-cols-fit auto-flow-col justify-items-center gap-5">
+                {% for i in range(5) %}
+                    {% include 'components/article_card.html'%}
+                {% endfor %}
+            </div>
+        </div>
+
+                <!-- Pagination button -->
+                <div class="flex justify-center items-center space-x-5 py-20">
+                    <svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="cursor-pointer">
+                        <path d="M7.01874 13L1.13577 7L7.01874 1" stroke="#adadad" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <button class="text-white bg-purple w-10 h-10 rounded-lg font-bold text-center">1</button>
+                    <button class="w-10 h-10 rounded-lg text-soft-black text-center font-bold">2</button>
+                    <button class="w-10 h-10 rounded-lg text-soft-black text-center font-bold">3</button>
+                    <button class="w-10 h-10 rounded-lg text-soft-black text-center font-bold">4</button>
+                    <button class="w-10 h-10 rounded-lg text-soft-black text-center font-bold">5</button>
+                    <svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="cursor-pointer">
+                        <path d="M1.98123 1L7.8642 7L1.98123 13" stroke="#313131" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        
+                </div>
+    </main>
+{% endblock %}

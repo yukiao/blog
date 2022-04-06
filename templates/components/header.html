@@ -1,0 +1,37 @@
+<nav class="w-full shadow-md fixed top-0 bg-white z-10">
+    <div class="h-[128px] w-4/5 mx-auto flex justify-between items-center">
+        <div></div>
+        <ul class="flex space-x-10">
+            {% if active == 'home'%}
+                <li class="font-bold text-active-black after:block after:h-[3px] after:w-[50px] after:bg-soft-black after:rounded-full after:absolute after:mt-2">Home</li>
+            {% else %}
+                <li class="text-soft-black"><a href="/">Home</a></li>
+            {% endif%}
+
+            {% if active == 'category'%}
+                <li class="font-bold text-active-black after:block after:h-[3px] after:w-[50px] after:bg-soft-black after:rounded-full after:absolute after:mt-2">Category</li>
+            {% else %}
+            <li class="text-soft-black"><a href="/categories">Category</a></li>
+            {% endif%}
+
+            {% if active == 'tag'%}
+                <li class="font-bold text-active-black after:block after:h-[3px] after:w-[50px] after:bg-soft-black after:rounded-full after:absolute after:mt-2">Tag</li>
+            {% else %}
+                <li class="text-soft-black"><a href="/tags">Tag</a></li>
+            {% endif%}
+
+            {% if active == 'about'%}
+                <li class="font-bold text-active-black after:block after:h-[3px] after:w-[50px] after:bg-soft-black after:rounded-full after:absolute after:mt-2">About</li>
+            {% else %}
+                <li class="text-soft-black"><a href="/about">About</a></li>
+            {% endif%}
+        </ul>
+        <div>
+            <button
+                class="bg-purple text-white font-semibold px-5 py-2 rounded-lg"
+            >
+                Login
+            </button>
+        </div>
+    </div>
+</nav>

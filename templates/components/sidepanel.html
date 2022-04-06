@@ -1,0 +1,80 @@
+<div class="w-[362px] py-5 px-8 sticky top-[128px] self-start ">
+    {% if type =='post'%}
+        <div>
+            <h1 class="text-2xl text-active-black font-bold">More from this author</h1>
+            {% for i in range(5)%}
+            <div class="mt-5 ml-5">
+                <div class="flex items-center space-x-2 mt-5">
+                    <!-- <div class="w-[40px] h-[40px]">
+                        <img
+                            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80"
+                            alt="avatar"
+                            class="object-center object-cover rounded-full"
+                        />
+                    </div> -->
+                    <!-- <div class="flex flex-col space-y-1">
+                        <span class="font-medium text-soft-black">James Smith</span>
+                    </div> -->
+                </div>
+                <span class="font-medium text-active-black mt-3 inline-block text-lg hover:text-purple cursor-pointer">How to win hackathon competition?</span>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div>
+            <h1 class="text-2xl text-active-black font-bold">Most Viewed</h1>
+            {% for i in range(5)%}
+            <div class="mt-5 ml-5">
+                <div class="flex items-center space-x-2 mt-5">
+                    <!-- <div class="w-[40px] h-[40px]">
+                        <img
+                            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80"
+                            alt="avatar"
+                            class="object-center object-cover rounded-full"
+                        />
+                    </div> -->
+                    <!-- <div class="flex flex-col space-y-1">
+                        <span class="font-medium text-soft-black">James Smith</span>
+                    </div> -->
+                </div>
+                <span class="font-medium text-active-black mt-3 inline-block text-lg hover:text-purple cursor-pointer">How to win hackathon competition?</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-10">
+            <h1 class="text-2xl text-active-black font-bold">Category</h1>
+            <div class="flex flex-wrap mt-3">
+                <span class="bg-[#efefef] text-soft-black font-medium py-2 px-5 rounded-full m-2 cursor-pointer">Health</span>
+                <span class="bg-[#efefef] text-soft-black font-medium py-2 px-5 rounded-full m-2 cursor-pointer">Tech</span>
+                <span class="bg-[#efefef] text-soft-black font-medium py-2 px-5 rounded-full m-2 cursor-pointer">Social</span>
+                <span class="bg-[#efefef] text-soft-black font-medium py-2 px-5 rounded-full m-2 cursor-pointer">Finance</span>
+            </div>
+        </div>
+
+        <div class="mt-10">
+            <h1 class="text-2xl text-active-black font-bold">Tag</h1>
+            <div class="flex flex-wrap mt-3">
+                {% with name="Tips" %}
+                    {% include 'components/tag.html'%}
+                {% endwith %}
+
+                {% with name="Nature" %}
+                    {% include 'components/tag.html'%}
+                {% endwith %}
+
+                {% with name="JS" %}
+                    {% include 'components/tag.html'%}
+                {% endwith %}
+
+                {% with name="Python" %}
+                    {% include 'components/tag.html'%}
+                {% endwith %}
+
+                {% with name="Cheatsheet" %}
+                    {% include 'components/tag.html'%}
+                {% endwith %}
+            </div>
+        </div>
+    {% endif %}
+</div>

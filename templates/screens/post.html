@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+    {% include "components/header.html" %}
+    <main class="w-4/5 mx-auto mt-[128px] py-10">
+        <!-- Main Content and Sidepanel -->
+        <div class="flex ">
+            <div class="flex-1 py-5 pl-10 pr-10">
+                <div class="aspect-w-16 aspect-h-9 flex flex-col after:block">
+                    <img
+                        class="w-full h-full object-center object-cover rounded-lg"
+                        src="https://images.unsplash.com/photo-1648990328200-bd901db97b55?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                    />
+                </div>
+                {% with name="Nature"%}
+                    {% include "components/tag.html" %}
+                {% endwith %}
+                <h1 class="text-active-black font-bold text-4xl mt-5">
+                    Daftar Tempat Wisata untuk Mengisi Liburanmu
+                </h1>
+                <div class="flex items-center space-x-2 my-5">
+                    <div class="w-[50px] h-[50px]">
+                        <img
+                            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80"
+                            alt="avatar"
+                            class="object-center object-cover rounded-full"
+                        />
+                    </div>
+                    <div class="flex flex-col space-y-1">
+                        <span class="font-medium text-soft-black">By: James</span>
+                        <span class="font-medium text-sm text-soft-gray"
+                            >29 February 2021</span
+                        >
+                    </div>
+                </div>
+                <p class="text-soft-black my-10">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi molestias accusantium ad autem iure quis laudantium veniam quidem vitae dolorum vel maiores molestiae minus nam, beatae at provident. Ipsam tenetur dolore odit hic! Eaque sapiente, a atque repellat modi, impedit optio ullam veritatis corporis quisquam neque illo nobis dolores nisi dolor velit quos porro, iure nulla inventore expedita? Quas sint adipisci ut soluta pariatur ratione consequuntur voluptatibus, aut, distinctio delectus sed, maxime minus vitae voluptas fugit facere non assumenda ipsam. Doloremque, veritatis. Sit ea eos laboriosam excepturi saepe pariatur vitae exercitationem voluptates, aliquam expedita esse minus, nostrum labore perferendis porro repudiandae ullam temporibus dolorem. Suscipit ullam quam facilis dicta nobis eligendi. Pariatur quas fugit consequuntur illum ab earum nihil adipisci minus natus enim, ad aliquid veritatis, modi ullam hic beatae vel et facilis ipsam magnam voluptatibus alias? Veritatis, veniam! Ad inventore illum reiciendis maiores illo. Aliquam officiis aut magnam incidunt labore earum a saepe fugiat quidem quo veniam voluptatibus consequuntur, quasi hic alias voluptas commodi autem, optio expedita quae distinctio. Quis provident porro odit, fugit, animi nobis perferendis cum amet distinctio officiis alias consequatur incidunt id ipsam sapiente repellat illo assumenda saepe enim dolorum blanditiis cumque! Consectetur odio dolorem autem asperiores, nisi fuga? Culpa distinctio rem enim nam, asperiores eius maxime vel optio magnam! Animi totam beatae consectetur vero fuga iste! Molestiae recusandae voluptates error mollitia tempore ut dolore, laboriosam iure nostrum totam blanditiis placeat aspernatur. Ipsum fugit, magnam praesentium nihil pariatur iusto cupiditate vitae impedit. Vitae veniam, fuga fugiat soluta quis facilis aspernatur odit necessitatibus deleniti rem dolores numquam id facere molestias odio nostrum culpa dolorem totam consequuntur sequi debitis laboriosam porro ab? Eaque illo a est perspiciatis, ex commodi. Repellat, debitis deleniti quod praesentium qui at nesciunt nobis aspernatur cumque, aperiam, quia dolorum! Delectus totam blanditiis impedit qui ipsam maiores nesciunt reiciendis, enim cupiditate voluptatibus odio perferendis assumenda velit tenetur voluptatem nihil! Illo quasi voluptatem accusamus reprehenderit distinctio! Tempora animi dolores corrupti repudiandae quasi fugit modi dolorum amet velit perferendis facilis magni, incidunt libero unde, eveniet autem. Ullam exercitationem mollitia voluptatibus tenetur blanditiis accusamus quidem aspernatur facilis voluptas possimus nostrum quia, et doloremque maiores esse voluptate autem eligendi cumque consectetur sint, unde commodi nam! Id numquam aspernatur et temporibus ipsa accusantium omnis sint harum, rerum, veritatis iste! Corrupti animi ad explicabo similique in adipisci accusantium aut assumenda quidem! Nam impedit dolores delectus assumenda minima, vero vel mollitia est eveniet voluptatum minus corrupti cupiditate at repellendus illum numquam excepturi tenetur aliquam. Itaque laboriosam recusandae quaerat. Perferendis magnam officia quisquam hic omnis obcaecati enim explicabo commodi. Laborum totam voluptates laudantium illo exercitationem soluta beatae esse provident repellat tempora iusto sint numquam repellendus necessitatibus assumenda tenetur est aperiam, magnam officia harum labore quos! Dignissimos ex, sint fugit nemo cumque voluptates totam maxime ducimus perspiciatis necessitatibus alias fuga at, consequuntur iste, eius natus? Id, tempora rem? Ut, quos. Dolor at quas repudiandae soluta ab minus hic dolores sint quasi nesciunt porro, similique tempore tempora placeat numquam ipsum, obcaecati reiciendis. Provident, reprehenderit eaque!
+                </p>
+            </div>
+
+            <!-- Sidepanel -->
+            {% with type='post'%}
+                {% include 'components/sidepanel.html' %}
+            {% endwith %}
+        </div>
+
+        
+    </main>
+{% endblock %}

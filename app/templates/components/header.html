@@ -27,11 +27,25 @@
             {% endif%}
         </ul>
         <div>
-            <button
-                class="bg-purple text-white font-semibold px-5 py-2 rounded-lg"
-            >
-                Login
-            </button>
+            {% if user %}
+            <form action="/logout" method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button
+                    class="bg-purple text-white font-semibold px-5 py-2 rounded-lg"
+                >
+                    Logout
+                </button>
+            </form>
+            {% else %}
+            <form action="/login">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button
+                    class="bg-purple text-white font-semibold px-5 py-2 rounded-lg"
+                >
+                    Login
+                </button>
+            </form>
+            {% endif %}
         </div>
     </div>
 </nav>

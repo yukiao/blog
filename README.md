@@ -16,7 +16,7 @@ Langkah untuk menjalankan website
     ```
 4. Jalankan server
     ```
-    python app.py
+    python run.py
     ```
 5. Silahkan buka url berikut pada browser anda
     ```

@@ -1,0 +1,54 @@
+{% extends 'base.html'%}
+{% block content%}
+    <div class="w-screen min-h-screen overflow-x-hidden">
+        <div class="flex items-center justify-center h-screen relative">
+            {% if next_path %}
+                <form method="post" action={{ "/login?next_path=" ~ next_path}} class="flex-1 flex flex-col items-center justify-center p-10 relative">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <p class="absolute -top-10">{{message}}</p>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <h1 class="text-4xl text-active-black font-bold">Welcome Back</h1>
+                    <p class="mt-5 mb-10 text-soft-gray font-medium">Login to your account and start your activity here</p>
+                    <div class="flex flex-col">
+                        {{ form.csrf_token() }}
+                        {{ form.username.label(class_="font-semibold")}}
+                        {{ form.username(class_="mt-3 bg-[#efefef] outline-none py-2 px-5 rounded-md text-soft-black", placeholder="johndoe")}}
+                        {{ form.password.label(class_="font-semibold mt-5")}}
+                        {{ form.password(class_="mt-3 bg-[#efefef] outline-none py-2 px-5 rounded-md text-soft-black", placeholder="johnydoe")}}
+        
+                        <button type="submit" class="bg-purple py-3 text-white font-bold rounded-md mt-10 rounded-md">Login</button>
+                    </div>
+                </form>
+            {% else %}
+                <form method="post" action="/login" class="flex-1 flex flex-col items-center justify-center p-10 relative">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <p class="absolute -top-10">{{message}}</p>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <h1 class="text-4xl text-active-black font-bold">Welcome Back</h1>
+                    <p class="mt-5 mb-10 text-soft-gray font-medium">Login to your account and start your activity here</p>
+                    <div class="flex flex-col">
+                        {{ form.csrf_token() }}
+                        {{ form.username.label(class_="font-semibold")}}
+                        {{ form.username(class_="mt-3 bg-[#efefef] outline-none py-2 px-5 rounded-md text-soft-black", placeholder="johndoe")}}
+                        {{ form.password.label(class_="font-semibold mt-5")}}
+                        {{ form.password(class_="mt-3 bg-[#efefef] outline-none py-2 px-5 rounded-md text-soft-black", placeholder="johnydoe")}}
+        
+                        <button type="submit" class="bg-purple py-3 text-white font-bold rounded-md mt-10 rounded-md">Login</button>
+                    </div>
+                </form>
+            {% endif %}
+            <div class="flex-1 bg-purple h-full w-full"></div>
+        </div>
+
+    </div>
+{% endblock %}

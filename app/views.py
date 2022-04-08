@@ -1,11 +1,10 @@
 from datetime import timedelta
 import functools
-from urllib import parse
 from flask import session, flash, jsonify, redirect, render_template, request, send_from_directory, url_for
 from app import app
 from app import bcrypt, csrf
 from app.models import User
-from app.Forms import CreatePostForm, LoginForm
+from app.forms import LoginForm, PostForm
 from flask_ckeditor import upload_success, upload_fail
 import os
 
@@ -84,6 +83,15 @@ def login():
     else:
         print(next_path)
         return render_template("screens/login.html", form=form, next_path=next_path)
+
+@app.route("/dashboard", methods=['GET', 'POST'])
+def dashboard():
+    form = PostForm()
+    
+    if request.method == 'POST':
+        print(request.form)
+        return render_template("screens/admin/dashboard.html", form=form)
+    return render_template("screens/admin/dashboard.html", form=form)
 
 @app.route("/input",methods=["GET", "POST"])
 def input():

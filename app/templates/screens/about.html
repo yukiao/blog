@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+{% with active='about'%}
+{% include 'components/header.html'%}
+{% endwith %}
+<main class="w-4/5 mx-auto">
+    <div class="mt-[128px] py-10">
+        <h1 class="font-bold text-4xl text-active-black">
+            About
+        </h1>
+        <p class="mt-5">
+            Media digital yang mencakup artikel untuk semua orang. Artikel-artikel khusus dan lengkap
+            disajikan berdasarkan keiginan pembaca.
+        </p>
+
+        <div class="grid grid-cols-fit auto-flow-col justify-items-center gap-5">
+            <div class="w-[350px] my-8 ">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <p class="mt-3">SEARCH</p>
+                <p class=" text-soft-gray text-sm mt-3">
+                    Mencari artikel berdasarkan kategori ataupun berdasarkan bulan dan tahun artikel
+                    diterbitkan dengan mudah menggunakan fitur ...
+                </p>
+            </div>
+            <div class="w-[350px] my-8 ">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+                <p class="mt-3">CREATE</p>
+                <p class=" text-soft-gray text-sm mt-3">
+                    Tersedia halaman bagi penulis untuk membuat, mengedit, ataupun menghapus artikel yang diinginkan
+                    menggunakan fitur CRUD kami.
+                </p>
+            </div>
+            <div class="w-[350px] my-8 ">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <p class="mt-3">READ</p>
+                <p class=" text-soft-gray text-sm mt-3">
+                    Anda dapat merasakan pengalaman membaca yang nyaman dalam media digital kami karena interface media
+                    yang minimalis.
+                </p>
+            </div>
+        </div>
+
+        <p class="mt-3">
+            Dibuat menggunakan teknologi Flask Python, Tailwind CSS, dan MongoDB.
+        </p>
+
+    </div>
+</main>
+{% endblock %}

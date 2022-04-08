@@ -6,6 +6,30 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Blog | Home</title>
         <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
+        <style type="text/tailwindcss">
+            @layer utilities {
+                .pagination{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 40px 0
+                }
+                .page-item{
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 700;
+                    border-radius: 0.5rem;
+                    color: #4e4e4e
+                }
+                .page-item.active{
+                    background: #645ADF;
+                    color: white;
+                }
+            }
+        </style>
         <script>
             tailwind.config = {
                 theme: {

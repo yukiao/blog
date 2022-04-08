@@ -3,11 +3,12 @@ import os
 import functools
 from datetime import timedelta
 from flask import session, flash, jsonify, redirect, render_template, request, send_from_directory, url_for
+from flask_paginate import Pagination, get_page_parameter
+from flask_ckeditor import upload_success, upload_fail
 from app import app
 from app import bcrypt, csrf
 from app.models import Posts, User, Category
 from app.forms import LoginForm, PostForm
-from flask_ckeditor import upload_success, upload_fail
 
 # Fungsi untuk mengautentikasi user
 def login_required(func):
@@ -31,7 +32,16 @@ def index():
         user = session.get('_id')
         
     articles = Posts.objects()
-    return render_template("screens/index.html", user=user, articles=articles)
+    
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page=5
+    
+    offset = (page-1) * per_page
+    
+    paginated_articles = articles[offset:offset + per_page]
+    
+    pagination = Pagination(page=page, total=len(articles), per_page=5)
+    return render_template("screens/index.html", user=user, articles=paginated_articles, pagination=pagination)
 
 @app.route("/posts/<post_slug>")
 def posts(post_slug):

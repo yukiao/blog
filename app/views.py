@@ -43,6 +43,10 @@ def categories():
 def tags():
     return render_template("screens/tag.html")
 
+@app.route("/about")
+def about():
+    return render_template("screens/about.html")
+
 @csrf.exempt
 @app.route("/register", methods=["POST"])
 def register():

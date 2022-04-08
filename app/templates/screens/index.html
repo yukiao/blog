@@ -73,10 +73,8 @@
                 </div>
 
                 <div class="flex flex-wrap justify-between mt-10">
-                    {% for i in range(4) %}
-                        {% with name="Nature"%}
-                            {% include 'components/article_card.html' %}
-                        {% endwith %}
+                    {% for article in articles %}
+                        {% include 'components/article_card.html' %}
                     {% endfor %}
                 </div>
             </div>

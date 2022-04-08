@@ -1,12 +1,13 @@
-from datetime import timedelta
+import json
+import os
 import functools
+from datetime import timedelta
 from flask import session, flash, jsonify, redirect, render_template, request, send_from_directory, url_for
 from app import app
 from app import bcrypt, csrf
-from app.models import User
+from app.models import Posts, User, Category
 from app.forms import LoginForm, PostForm
 from flask_ckeditor import upload_success, upload_fail
-import os
 
 # Fungsi untuk mengautentikasi user
 def login_required(func):
@@ -28,12 +29,14 @@ def index():
     user = None
     if '_id' in session:
         user = session.get('_id')
-    return render_template("screens/index.html", user=user)
+        
+    articles = Posts.objects()
+    return render_template("screens/index.html", user=user, articles=articles)
 
-@app.route("/posts/<postId>")
-def posts(postId):
-    print(postId)
-    return render_template("screens/post.html")
+@app.route("/posts/<post_slug>")
+def posts(post_slug):
+    article = Posts.objects(slug=post_slug).first()
+    return render_template("screens/post.html", article=article)
 
 @app.route("/categories")
 def categories():
@@ -47,24 +50,26 @@ def tags():
 def about():
     return render_template("screens/about.html")
 
-@csrf.exempt
-@app.route("/register", methods=["POST"])
-def register():
-    username = request.json['username']
-    password = request.json['password']
+# @csrf.exempt
+# @app.route("/register", methods=["POST"])
+# def register():
+#     username = request.json['username']
+#     password = request.json['password']
     
-    hashed_password = bcrypt.generate_password_hash(password, 10).decode('utf-8')
+#     hashed_password = bcrypt.generate_password_hash(password, 10).decode('utf-8')
 
-    user = User(username=username, password=hashed_password)
-    res = user.save()
-    return jsonify(res)
+#     user = User(username=username, password=hashed_password)
+#     res = user.save()
+#     return jsonify(res)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    
+    if "_id" in session:
+        return redirect(url_for("index"))
+    
     form = LoginForm()
-    
     next_path = request.args.get('next_path')
-    
     if request.method == "POST":
         if form.validate_on_submit():
             
@@ -88,28 +93,58 @@ def login():
         print(next_path)
         return render_template("screens/login.html", form=form, next_path=next_path)
 
+
 @app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
     form = PostForm()
     
     if request.method == 'POST':
-        print(request.form)
-        return render_template("screens/admin/dashboard.html", form=form)
+        if form.validate_on_submit():
+            user_id = session.get('_id')
+            author = User.objects(id = user_id).first()
+            
+            word_array = request.form['title'].lower().split(" ")
+            slug = "-".join(word_array)
+            category = Category.objects(id=request.form['category']).first()
+            print(request.form)
+            new_post = Posts(
+                author=author,
+                title=request.form['title'],
+                slug=slug,
+                cover=request.form['cover'],
+                category=category,
+                content=request.form['content'],
+            )
+            new_post.save()
+            return render_template("screens/admin/dashboard.html", form=form)
     return render_template("screens/admin/dashboard.html", form=form)
 
-@app.route("/input",methods=["GET", "POST"])
-def input():
-    if request.method == "POST":
-        data = request.form.get('content')
-        print(data)
-    form = CreatePostForm()
-    return render_template("input.html",form=form)
+@app.route('/posted')
+def posted():
+    posts = Posts.objects().first()
+    print(posts.category['name'])
+    return jsonify(posts)
 
-@app.route('/protected')
-@login_required
-def protected():
-    return "Hello"
-
+@csrf.exempt
+@app.route('/category', methods=['GET', 'POST'])
+def admin_category():
+    if request.method == 'POST':
+        category_name = request.json['category']
+        category_name.lower()
+        try:
+            new_category = Category(name=category_name)
+            new_category = new_category.save()
+            return jsonify({
+                "status": "success",
+                "message": "category created",
+                "data" : new_category
+            })
+        except:
+            return {
+                "status" : "failed",
+                "message": "something went wrong"
+            }
+            
 @app.route('/files/<filename>')
 def uploaded_files(filename):
     path="static/images"

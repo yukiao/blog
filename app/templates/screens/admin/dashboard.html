@@ -1,18 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div>
-        <form action="/dashboard" method="post" class="flex flex-col">
+    <div class="w-4/5 mx-auto">
+        <form action="/dashboard" method="post" class="flex flex-col py-20 px-10">
             {{form.csrf_token()}}
-            {{form.title.label()}}
-            {{form.title()}}
-            {{form.category.label()}}
-            {{form.category()}}
-            {{form.content.label()}}
-            {{form.content()}}
-            {{form.postedAt.label()}}
-            {{form.postedAt()}}
-            <input type="submit" value="Submit" />
+            {{form.title.label(class_="text-xl font-bold text-active-black")}}
+            {{form.title(class_="bg-[#efefef] px-5 py-2 outline-none text-soft-black mt-3 rounded-md")}}
+            {{form.cover.label(class_="text-xl font-bold text-active-black mt-5")}}
+            {{form.cover(class_="bg-[#efefef] px-5 py-2 outline-none text-soft-black mt-3 rounded-md")}}
+            {{form.category.label(class_="text-xl font-bold text-active-black mt-5")}}
+            {{form.category(class_="bg-[#efefef] px-5 py-2 outline-none text-soft-black mt-3 rounded-md self-start")}}
+            {{form.content.label(class_="text-xl font-bold text-active-black mt-5")}}
+            {{form.content(class_="bg-[#efefef] px-5 py-2 outline-none text-soft-black mt-3 rounded-md")}}
+            {{form.postedAt.label(class_="text-xl font-bold text-active-black mt-5")}}
+            {{form.postedAt(class_="bg-[#efefef] px-5 py-2 outline-none text-soft-black mt-3 rounded-md min-w-0 self-start")}}
+            <button type="submit" class="inline-block self-start bg-purple text-white font-bold px-5 py-2 rounded-md mt-10">Publish</button>
         </form>
         {{ ckeditor.load() }}
         {{ ckeditor.config(name='content') }}

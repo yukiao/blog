@@ -9,6 +9,7 @@ from app import app
 from app import bcrypt, csrf
 from app.models import Posts, User, Category
 from app.forms import LoginForm, PostForm
+from mongoengine.queryset.visitor import Q
 
 # Fungsi untuk mengautentikasi user
 def login_required(func):
@@ -32,6 +33,8 @@ def index():
         user = session.get('_id')
         
     articles = Posts.objects()
+    most_viewed = Posts.objects().order_by('-view').limit(5)
+    category = Category.objects()
     
     page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page=5
@@ -41,12 +44,18 @@ def index():
     paginated_articles = articles[offset:offset + per_page]
     
     pagination = Pagination(page=page, total=len(articles), per_page=5)
-    return render_template("screens/index.html", user=user, articles=paginated_articles, pagination=pagination)
+    return render_template("screens/index.html", user=user, articles=paginated_articles, most_viewed=most_viewed, category=category, pagination=pagination)
 
 @app.route("/posts/<post_slug>")
 def posts(post_slug):
     article = Posts.objects(slug=post_slug).first()
-    return render_template("screens/post.html", article=article)
+    Posts.objects(slug=post_slug).update_one(inc__view=1)
+    
+    article.reload()
+    
+    author_articles = Posts.objects(Q(author = article.author) & Q(slug__ne=post_slug)).limit(5)
+    
+    return render_template("screens/post.html", article=article, author_articles=author_articles)
 
 @app.route("/categories")
 def categories():
@@ -100,7 +109,6 @@ def login():
                 return redirect(url_for('login'))
         return render_template("screens/login.html", form=form, next_path=next_path)
     else:
-        print(next_path)
         return render_template("screens/login.html", form=form, next_path=next_path)
 
 
@@ -116,7 +124,6 @@ def dashboard():
             word_array = request.form['title'].lower().split(" ")
             slug = "-".join(word_array)
             category = Category.objects(id=request.form['category']).first()
-            print(request.form)
             new_post = Posts(
                 author=author,
                 title=request.form['title'],
@@ -132,7 +139,6 @@ def dashboard():
 @app.route('/posted')
 def posted():
     posts = Posts.objects().first()
-    print(posts.category['name'])
     return jsonify(posts)
 
 @csrf.exempt

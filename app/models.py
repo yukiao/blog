@@ -7,6 +7,7 @@ class User(db.Document):
     
 class Category(db.Document):
     name = db.StringField(required=True, unique=True, max_length=100)
+    slug = db.StringField(required=True, unique=True, max_length=100)
 class Posts(db.Document):
     author = db.ReferenceField(User)
     title = db.StringField(required=True)

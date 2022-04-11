@@ -9,10 +9,12 @@
                 Tag
             </h1>
             <ul class="flex justify-center space-x-10 py-10 items-center flex-wrap w-full">
-                <li class="font-bold text-purple bg-[#645adf1a] py-2 px-5 rounded-md">All</li>
-                <li class="text-soft-black">Tips</li>
-                <li class="text-soft-black">Python</li>
-                <li class="text-soft-black">JS</li>
+                <li class="font-bold text-purple bg-[#645adf1a] py-2 px-5 rounded-md"><a href="/tags">All</a></li>
+                {% for tag in tags %}
+                    <li>
+                        <a href="/tags/{{tag.name}}">#{{tag.name}}</a>
+                    </li>
+                {% endfor %}
             </ul>
 
             <div class="grid grid-cols-fit auto-flow-col justify-items-center gap-5">

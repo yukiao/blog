@@ -67,6 +67,9 @@ def index():
     
     offset = (page-1) * per_page
     
+    if len(articles) < offset:
+        return redirect("/error")
+    
     paginated_articles = articles[offset:offset + per_page]
     
     for article in paginated_articles:
@@ -118,7 +121,6 @@ def categories_detail(category_slug):
     articles = Posts.objects(category=category)
     
     categories = Category.objects()
-    print(categories)
     
     page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page=6
@@ -133,8 +135,24 @@ def categories_detail(category_slug):
 def tags():
     user = get_user()
     articles = Posts.objects()
+    tags = Tag.objects()
     
-    return render_template("screens/tag.html", user=user, articles=articles)
+    return render_template("screens/tag.html", user=user, articles=articles, tags=tags)
+
+@app.route("/tags/<tag>")
+def tags_detail(tag):
+    user = get_user()
+    lookup_tag = Tag.objects(name=tag).first()
+    print(lookup_tag.name)
+
+    if not lookup_tag:
+        return redirect('/error')
+    
+    articles = Posts.objects(tags=lookup_tag)
+    
+    tags = Tag.objects()
+    
+    return render_template("screens/tag.html", user=user, articles=articles, tags=tags)
 
 @app.route("/about")
 def about():

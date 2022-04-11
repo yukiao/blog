@@ -359,3 +359,7 @@ def logout():
     if '_id' in session:
         session.pop('_id')
     return redirect(url_for('index'))
+
+@app.route("/error")
+def error():
+    return render_template("screens/error.html")

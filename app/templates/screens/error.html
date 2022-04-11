@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="flex w-screen h-screen">
+    <div class="flex justify-center items-center mx-auto">
+        <div class="text-center mx-8">
+            <h1 class="text-4xl font-bold mb-3">Uh Oh!</h1>
+            <h3 class="text-2xl font-bold mb-3">The page you were looking for doesn't exist.</h3>
+            <p class="text-soft-gray mb-5">
+                You might have typed in the wrong address or the page has moved. In the meantime, try again or
+                <a class="text-purple font-medium" href="/">return to the home page</a>
+            </p>
+            <img class="mx-auto w-1/3 my-5" src="{{ url_for('static', filename='images/vectors/error.svg') }}">
+        </div>
+
+    </div>
+</div>
+
+
+
+{% endblock %}

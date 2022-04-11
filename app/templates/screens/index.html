@@ -28,9 +28,11 @@
                         />
                     </div>
                     <div class="px-5 pb-5">
-                        {% with name="Nature"%}
-                            {% include "components/tag.html" %}
-                        {% endwith %}
+                        {% if articles[0].tags %}
+                            {% for tag in article.tags%}
+                                {% include "components/tag.html" %}
+                            {% endfor %}
+                        {% endif %}
                         <h1 class="text-active-black font-bold text-xl md:text-4xl mt-5">
                             {{articles[0].title}}
                         </h1>

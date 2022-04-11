@@ -8,6 +8,9 @@ class User(db.Document):
 class Category(db.Document):
     name = db.StringField(required=True, unique=True, max_length=100)
     slug = db.StringField(required=True, unique=True, max_length=100)
+    
+class Tag(db.Document):
+    name = db.StringField(required=True, unique=True, max_length=50)
 class Posts(db.Document):
     author = db.ReferenceField(User)
     title = db.StringField(required=True)
@@ -16,4 +19,5 @@ class Posts(db.Document):
     category = db.ReferenceField(Category)
     content = db.StringField(required=True)
     view = db.IntField(default=0)
+    tags = db.ListField(db.ReferenceField(Tag))
     posted_at = db.DateField(default=date.today())

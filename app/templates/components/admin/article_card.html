@@ -1,0 +1,36 @@
+<div class="w-full lg:w-[350px] my-8 flex flex-col shadow-md rounded-lg">
+    <div class="aspect-h-9 aspect-w-16">
+        <img
+            src="{{article.cover}}"
+            class="w-full h-full object-center object-cover rounded-lg"
+        />
+    </div>
+    <div class="flex flex-col h-full px-5 pt-0 pb-5">
+
+        <div class="flex flex-wrap">
+            {% if article.tags %}
+                {% for tag in article.tags%}
+                    {% include "components/tag.html" %}
+                {% endfor %}
+            {% endif %}
+        </div>
+        <h1 class="text-active-black font-bold text-xl mt-3">
+            {{article.title}}
+        </h1>
+        <p class="text-soft-gray mt-3">
+            Kamu lagi libur namun tidak tahu ingin kemana? Disini kamu bisa
+            memperoleh destinasi destinasi wisata untuk mengisi ...
+        </p>
+
+        <div class="mt-auto">
+
+            <div class="mt-5 flex justify-end space-x-5">
+                <a href="/admin/posts/edit/{{article.id}}" class="bg-purple px-5 py-2 rounded-md font-bold text-white">Edit</a>
+                <form method="post" action="/admin/posts/delete/{{article.id}}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <button class="bg-[#df5a5a] px-5 py-2 rounded-md font-bold text-white" type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -28,6 +28,31 @@
                     background: #645ADF;
                     color: white;
                 }
+                #detail-content h1{
+                    font-size: 32px;
+                    margin: 20px 0;
+                }
+
+                #detail-content h2{
+                    font-size: 28px;
+                    margin: 20px 0;
+                }
+
+                #detail-content h3{
+                    font-size: 24px;
+                    margin: 20px 0;
+                }
+
+                #detail-content h4{
+                    font-size: 20px;
+                }
+
+                #detail-content li>ul{
+                    margin-left: 40px;
+                }
+                #detail-content li{
+                    list-style: disc;
+                }
             }
         </style>
         <script>
@@ -59,7 +84,7 @@
             }
         </style>
     </head>
-    <body class="">
+    <body class="w-screen max-w-full">
         {% block content %}{% endblock %}
     </body>
 </html>

@@ -5,7 +5,7 @@ from flask_wtf.csrf import CSRFProtect
 from flask_bcrypt import Bcrypt
 from flask_mongoengine import MongoEngine
 
-app = Flask(__name__, )
+app = Flask(__name__)
 
 app.config['SECRET_KEY'] = "VERY SECRET"
 app.config['CKEDITOR_FILE_UPLOADER'] = "upload"

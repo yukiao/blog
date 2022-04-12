@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% with active='category'%}
+        {% include 'components/header.html'%}
+    {% endwith %}
+    <main class="w-11/12 lg:w-4/5 mx-auto">
+        <div class="mt-[96px] py-10">
+            <h1 class="font-bold text-4xl text-active-black">
+                Archive
+            </h1>
+
+            <div class="grid grid-cols-fit auto-flow-col  gap-5">
+                {% for article in articles %}
+                    {% include 'components/article_card.html'%}
+                {% endfor %}
+            </div>
+        </div>
+        {{pagination.links}}
+    </main>
+{% endblock %}

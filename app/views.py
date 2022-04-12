@@ -1,3 +1,4 @@
+import json
 import os
 import functools
 from datetime import timedelta
@@ -80,6 +81,7 @@ def index():
     pagination = Pagination(page=page, total=len(articles), per_page=5)
     return render_template("screens/index.html", user=user, articles=paginated_articles, most_viewed=most_viewed, category=category, pagination=pagination, all_tags=all_tags)
 
+
 # Post Route
 @app.route("/posts/<post_slug>")
 def posts(post_slug):
@@ -108,7 +110,14 @@ def categories():
     page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page=6
     offset = (page-1) * per_page
+    
+    if len(articles) < offset:
+        return redirect("/error")
+    
     paginated_articles = articles[offset:offset + per_page]
+    for article in paginated_articles:
+        article.posted_at = get_formatted_date(article.posted_at)
+        
     pagination = Pagination(page=page, total=len(articles), per_page=per_page)
     
     return render_template("screens/category.html", articles=paginated_articles, pagination=pagination, categories=categories, active='all', user=user)
@@ -126,7 +135,15 @@ def categories_detail(category_slug):
     per_page=6
     
     offset = (page-1) * per_page
+    
+    if len(articles) < offset:
+        return redirect("/error")
+    
     paginated_articles = articles[offset:offset + per_page]
+    
+    for article in paginated_articles:
+        article.posted_at = get_formatted_date(article.posted_at)
+        
     pagination = Pagination(page=page, total=len(articles), per_page=per_page)
     
     return render_template("screens/category.html", articles=paginated_articles, pagination=pagination, categories=categories, active=category.name, user=user)
@@ -137,13 +154,27 @@ def tags():
     articles = Posts.objects()
     tags = Tag.objects()
     
-    return render_template("screens/tag.html", user=user, articles=articles, tags=tags)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page=6
+    
+    offset = (page-1) * per_page
+    
+    if len(articles) < offset:
+        return redirect("/error")
+    
+    paginated_articles = articles[offset:offset + per_page]
+    
+    for article in paginated_articles:
+        article.posted_at = get_formatted_date(article.posted_at)
+    
+    pagination = Pagination(page=page, total=len(articles), per_page=per_page)
+    
+    return render_template("screens/tag.html", user=user, articles=paginated_articles, tags=tags, pagination = pagination, )
 
 @app.route("/tags/<tag>")
 def tags_detail(tag):
     user = get_user()
     lookup_tag = Tag.objects(name=tag).first()
-    print(lookup_tag.name)
 
     if not lookup_tag:
         return redirect('/error')
@@ -152,7 +183,74 @@ def tags_detail(tag):
     
     tags = Tag.objects()
     
-    return render_template("screens/tag.html", user=user, articles=articles, tags=tags)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page=6
+    
+    offset = (page-1) * per_page
+    
+    if len(articles) < offset:
+        return redirect("/error")
+    
+    paginated_articles = articles[offset:offset + per_page]
+    
+    for article in paginated_articles:
+        article.posted_at = get_formatted_date(article.posted_at)
+    
+    pagination = Pagination(page=page, total=len(articles), per_page=per_page)
+    
+    return render_template("screens/tag.html", user=user, articles=paginated_articles,  pagination=pagination, tags=tags)
+
+@app.route("/archives/<int:year>/<int:month>")
+def archive(year, month):
+    user = get_user()
+    
+    pipeline = [
+        {
+            "$project": {
+                "author": "$author",
+                "title": "$title",
+                "slug": "$slug",
+                "cover": "$cover",
+                "category": "$category",
+                "content": "$content",
+                "view": "$view",
+                "posted_at": "$posted_at",
+                "year": {
+                    "$year": "$posted_at"
+                },
+                "month": {
+                    "$month": "$posted_at"
+                }
+            },
+        },
+        {
+            "$match": {
+                "$and": [
+                {"year": year},
+                {"month": month}
+                ]
+            }
+        },
+    ]
+    
+    articles = []
+    
+    year = Posts.objects().aggregate(pipeline)
+    for y in year:
+        articles.append(y)
+        
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page=6
+    
+    offset = (page-1) * per_page
+    
+    if len(articles) < offset:
+        return redirect("/error")
+    
+    paginated_articles = articles[offset:offset + per_page]
+    pagination = Pagination(page=page, total=len(articles), per_page=per_page)
+    
+    return render_template("screens/archive.html", user=user, articles=paginated_articles,  pagination=pagination)
 
 @app.route("/about")
 def about():
@@ -292,13 +390,25 @@ def edit_article(article_id):
             slug = "-".join(word_array)
             category = Category.objects(id=form.category.data).first()
             
-            print(form.category.data)
+            tags = request.form.getlist('tags[]')
+            
+            tag_list = []
+            
+            for tag in tags:
+                tag_exist = Tag.objects(name=tag).first()
+                if not tag_exist:
+                    new_tag = Tag(name=tag)
+                    new_tag.save()
+                    tag_list.append(new_tag)
+                else:
+                    tag_list.append(tag_exist)
 
             field_data = {
                 "title": form.title.data,
                 "slug": slug,
                 "cover": form.cover.data,
                 "category": category,
+                "tags": tag_list,
                 "content": form.content.data,
                 "posted_at": form.postedAt.data
             }
@@ -311,6 +421,12 @@ def edit_article(article_id):
     
     article = Posts.objects(id = article_id).first()
     
+    tags = []
+    
+    if article.tags:
+        for tag in article.tags:
+            tags.append(json.loads(tag.to_json()))
+    
     form.title.default = article.title
     form.cover.default = article.cover
     form.content.default = article.content
@@ -319,7 +435,7 @@ def edit_article(article_id):
     
     form.process()
     
-    return render_template("screens/admin/edit_article.html", form=form, article_id=article.id)
+    return render_template("screens/admin/edit_article.html", form=form, article_id=article.id, tags= json.dumps(tags))
 
 @app.route('/admin/posts/delete/<article_id>', methods=['POST'])
 @login_required
@@ -375,6 +491,10 @@ def logout():
         session.pop('_id')
     return redirect(url_for('index'))
 
-@app.route("/error")
+@app.route('/error')
 def error():
+    return render_template("screens/error.html")
+
+@app.errorhandler(404)
+def not_found(e):
     return render_template("screens/error.html")

@@ -4,7 +4,7 @@
             <h1 class="text-2xl text-active-black font-bold">More from this author</h1>
             {% for author_article in author_articles%}
                 <div class="mt-5 ml-5">
-                    <a href={{"/posts/" ~ author_article.slug}} class="font-medium text-active-black mt-3 inline-block text-lg hover:text-purple cursor-pointer">{{author_article.title}}</a>
+                    <a href="/posts/{{ author_article.slug}}" class="font-medium text-active-black mt-3 inline-block text-lg hover:text-purple cursor-pointer">{{author_article.title}}</a>
                 </div>
             {% endfor %}
         </div>
@@ -13,7 +13,7 @@
             <h1 class="text-2xl text-active-black font-bold">Most Viewed</h1>
             {% for article in most_viewed%}
             <div class="mt-5 ml-5">
-                <a href={{"/posts/" ~ article.slug}} class="font-medium text-active-black mt-3 inline-block text-lg hover:text-purple cursor-pointer">{{article.title}}</a>
+                <a href="/posts/{{article.slug}}" class="font-medium text-active-black mt-3 inline-block text-lg hover:text-purple cursor-pointer">{{article.title}}</a>
             </div>
             {% endfor %}
         </div>
@@ -22,7 +22,7 @@
             <h1 class="text-2xl text-active-black font-bold">Category</h1>
             <div class="flex flex-wrap mt-3">
                 {% for item in category %}
-                <a href={{"/categories/" ~ item.slug}} class="bg-[#efefef] text-soft-black font-medium py-2 px-5 rounded-full m-2 cursor-pointer">{{item.name}}</a>
+                <a href="/categories/{{item.slug}}" class="bg-[#efefef] text-soft-black font-medium py-2 px-5 rounded-full m-2 cursor-pointer">{{item.name}}</a>
                 {% endfor %}
             </div>
         </div>
@@ -35,5 +35,46 @@
                 {% endfor %}
             </div>
         </div>
+
+        <div class="mt-10">
+            <h1 class="text-2xl text-active-black font-bold">Archived</h1>
+            <div class="flex flex-col mt-3" id="archive">
+
+            </div>
+        </div>
     {% endif %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
+    <script>
+        let tempDate = moment(new Date()).format('YYYY-MM-DD');
+        
+        for(let i=5; i>0; i--){
+            let tempDateArray = tempDate.split("-")
+            let monthMapper = {
+                "01": "Januari",
+                "02": "Februari",
+                "03": "Maret",
+                "04": "April",
+                "05": "Mei",
+                "06": "Juni",
+                "07": "Juli",
+                "08": "Agustus",
+                "09": "September",
+                "10": "Oktober",
+                "11": "November",
+                "12": "Desember"
+            }
+            console.log(`${monthMapper[tempDateArray[1]]} ${tempDateArray[0]}`)
+
+            const wrapper = document.createElement("div")
+            wrapper.innerHTML = `
+            <div class="mt-3 ml-5">
+                <a href="/archives/${tempDateArray[0]}/${tempDateArray[1]}" class="font-medium text-active-black mt-3 inline-block text-lg hover:text-purple cursor-pointer">${monthMapper[tempDateArray[1]]} ${tempDateArray[0]}</a>
+            </div>
+            `
+
+            document.querySelector("#archive").appendChild(wrapper)
+
+            tempDate = moment(tempDate).subtract(1, 'months').endOf('month').format('YYYY-MM-DD');
+        }
+    </script>
 </div>

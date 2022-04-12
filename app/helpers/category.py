@@ -5,4 +5,6 @@ def getCategoriesPair():
     query = Categories.objects()
     for category in query:
         categories.append((category.id, category.name))
+        
+    print(categories)
     return categories

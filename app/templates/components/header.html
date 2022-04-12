@@ -1,6 +1,10 @@
 <nav class="w-full shadow-md fixed top-0 bg-white z-10">
     <div class="h-[96px] w-4/5 mx-auto flex justify-between items-center">
-        <div></div>
+        <div class="h-full py-5">
+            <a href="/">
+                <img src="{{url_for('static', filename='images/vectors/logo.svg')}}" class="h-full" />
+            </a>
+        </div>
         <ul class="flex space-x-10">
             {% if active == 'home'%}
                 <li class="font-bold text-active-black after:block after:h-[3px] after:w-[50px] after:bg-soft-black after:rounded-full after:absolute after:mt-2">Home</li>

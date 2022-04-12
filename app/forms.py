@@ -1,4 +1,5 @@
 import datetime
+from tokenize import String
 from flask_wtf import FlaskForm
 from flask_ckeditor import CKEditorField
 from wtforms import StringField, PasswordField, DateField
@@ -16,3 +17,11 @@ class PostForm(FlaskForm):
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
+    
+class RegisterForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired(0)])
+    name = StringField("Name", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    
+class CategoryForm(FlaskForm):
+    name = StringField("Category Name", validators=[DataRequired(0)])

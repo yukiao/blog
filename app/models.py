@@ -1,10 +1,12 @@
 from datetime import datetime
+from email.policy import default
 from app import db
 from datetime import date
 class Users(db.Document):
     username = db.StringField(required=True, unique=True)
+    name = db.StringField(required=True, max_length=30)
     password = db.StringField(required=True, min_length=5)
-    
+    role = db.StringField(default="author")
 class Categories(db.Document):
     name = db.StringField(required=True, unique=True, max_length=100)
     slug = db.StringField(required=True, unique=True, max_length=100)

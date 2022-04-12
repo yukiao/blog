@@ -1,54 +1,18 @@
 import json
 import os
-import functools
 from datetime import timedelta
 from flask import session, flash, jsonify, redirect, render_template, request, send_from_directory, url_for
 from flask_paginate import Pagination, get_page_parameter
 from flask_ckeditor import upload_success, upload_fail
 from app import app
-from app import bcrypt, csrf
+from app import bcrypt
+from app.helpers.category import getCategoriesPair
 from app.models import Posts, Tags, Users, Categories
-from app.forms import LoginForm, PostForm
+from app.forms import CategoryForm, LoginForm, PostForm, RegisterForm
 from mongoengine.queryset.visitor import Q
-
-# Fungsi untuk mengautentikasi user
-def login_required(func):
-    @functools.wraps(func)
-    def secure_function(*args, **kwargs):
-        if "_id" not in session:
-            return redirect(url_for("login", next_path=[request.full_path]))
-        return func(*args, **kwargs)
-    
-    return secure_function
-
-def get_user():
-    user = None
-    if '_id' in session:
-        user = session.get('_id')
-    
-    return user
-
-def get_formatted_date(date):
-    month_dict = {
-        1: "Januari",
-        2: "Februari",
-        3: "Maret",
-        4: "April",
-        5: "Mei",
-        6: "Juni",
-        7: "Juli",
-        8: "Agustus",
-        9: "September",
-        10: "Oktober",
-        11: "November",
-        12: "Desember"
-    }
-    
-    day = date.day
-    month = month_dict[date.month]
-    year = date.year
-    
-    return f'{day} {month} {year}'
+from app.helpers.get_formated_date import get_formatted_date
+from app.helpers.get_user import get_user
+from app.helpers.login_required import login_required
 
 @app.before_request
 def before_request():
@@ -78,8 +42,50 @@ def index():
 
     all_tags = Tags.objects()
 
+    top_tags = Posts.objects().aggregate([
+        {
+            "$unwind": "$tags"
+        },
+        {
+            "$lookup": {
+                "from": "tags",
+                "localField": "tags",
+                "foreignField": "_id",
+                "as": "tags"
+            }
+        },
+        {
+            "$group":{
+                "_id": "$tags.name",
+                "total": {
+                    "$sum": 1
+                }
+            }
+        },
+        {
+            "$sort": {
+                "total": -1
+            }
+        },
+        {
+            "$limit": 10
+        },
+        {
+            "$project": {
+                "name": "$_id",
+            }
+        }
+    ])
+    
+    all_tags = []
+    
+    for tag in top_tags:
+        all_tags.append({
+            "name": tag['name'][0]
+        })
+
     pagination = Pagination(page=page, total=len(articles), per_page=5)
-    return render_template("screens/index.html", user=user, articles=paginated_articles, most_viewed=most_viewed, category=category, pagination=pagination, all_tags=all_tags)
+    return render_template("screens/index.html", user=user, articles=paginated_articles, most_viewed=most_viewed, category=category, pagination=pagination, top_tags=all_tags)
 
 
 # Post Route
@@ -88,6 +94,10 @@ def posts(post_slug):
     user = get_user()
     
     article = Posts.objects(slug=post_slug).first()
+    
+    if not article:
+        return redirect('/error')
+    
     Posts.objects(slug=post_slug).update_one(inc__view=1)
     
     article.reload()
@@ -127,6 +137,10 @@ def categories_detail(category_slug):
     user = get_user()
     
     category = Categories.objects(slug=category_slug).first()
+    
+    if not category:
+        return redirect('/error')
+    
     articles = Posts.objects(category=category)
     
     categories = Categories.objects()
@@ -324,26 +338,29 @@ def admin_dashboard():
     
     total_views = Posts.objects(author = user_id).sum("view")
     
-    return render_template('screens/admin/dashboard.html', total_posts=total_posts, total_views=total_views)
+    return render_template('screens/admin/dashboard.html', total_posts=total_posts, total_views=total_views, author=author)
 
 @app.route('/admin/posts')
 @login_required
 def admin_post():
     user_id = session.get('_id')
     posts = Posts.objects(author=user_id)
+    author = Users.objects(id = user_id).first()
     
-    return render_template('screens/admin/post.html', posts=posts)
+    return render_template('screens/admin/post.html', posts=posts, author=author)
 
 @app.route("/admin/posts/new", methods=['GET', 'POST'])
 @login_required
 def new_article():
-    form = PostForm()
     
+    form = PostForm()
+    form.category.choices = getCategoriesPair()
+    
+    user_id = session.get('_id')
+    author = Users.objects(id = user_id).first()
+
     if request.method == 'POST':
         if form.validate_on_submit():
-            user_id = session.get('_id')
-            author = Users.objects(id = user_id).first()
-            
             word_array = form.title.data.strip().lower().split(" ")
             slug = "-".join(word_array)
             category = Categories.objects(id=request.form['category']).first()
@@ -374,12 +391,15 @@ def new_article():
             
             return redirect('/admin/posts')
         
-    return render_template("screens/admin/add_article.html", form=form)
+    return render_template("screens/admin/add_article.html", form=form, author=author)
 
 @app.route("/admin/posts/edit/<article_id>", methods=['GET', 'POST'])
 @login_required
 def edit_article(article_id):
     form = PostForm()
+    
+    user_id = session.get('_id')
+    author = Users.objects(id = user_id).first()
     
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -435,7 +455,7 @@ def edit_article(article_id):
     
     form.process()
     
-    return render_template("screens/admin/edit_article.html", form=form, article_id=article.id, tags= json.dumps(tags))
+    return render_template("screens/admin/edit_article.html", form=form, article_id=article.id, tags= json.dumps(tags), author=author)
 
 @app.route('/admin/posts/delete/<article_id>', methods=['POST'])
 @login_required
@@ -448,25 +468,95 @@ def delete_post(article_id):
     
     return render_template('screens/admin/post.html', posts=posts)
 
-@csrf.exempt
-@app.route('/category', methods=['GET', 'POST'])
-def admin_category():
+@app.route('/admin/authors')
+@login_required
+def manage_user():
+    user_id = session.get('_id')
+    author = Users.objects(id=user_id).first()
+    
+    users = Users.objects()
+    
+    return render_template('screens/admin/manage_user.html', author=author, users=users)
+
+@app.route('/admin/authors/new', methods=["GET", "POST"])
+@login_required
+def new_author():
+    user_id = session.get('_id')
+    author = Users.objects(id=user_id).first()
+    users = Users.objects()
+    
+    form = RegisterForm()
+    
     if request.method == 'POST':
-        category_name = request.json['category']
-        category_name.lower()
-        try:
-            new_category = Categories(name=category_name)
-            new_category = new_category.save()
-            return jsonify({
-                "status": "success",
-                "message": "category created",
-                "data" : new_category
-            })
-        except:
-            return {
-                "status" : "failed",
-                "message": "something went wrong"
-            }
+        username = form.username.data
+        
+        user_exist = Users.objects(username=username).first()
+        if(user_exist):
+            return render_template('screens/admin/add_author.html', error="Account already exists", author=author, users=users, form=form)
+        
+        name = form.name.data
+        password = form.password.data
+    
+        hashed_password = bcrypt.generate_password_hash(password, 10).decode('utf-8')
+        user = Users(username=username, name=name, password=hashed_password)
+        user.save()
+        
+        return redirect("/admin/authors")
+    
+    return render_template('screens/admin/add_author.html', author=author, users=users, form=form)
+
+@app.route('/admin/categories')
+@login_required
+def manage_category():
+    user_id = session.get('_id')
+    author = Users.objects(id=user_id).first()
+    
+    categories = Categories.objects()
+    
+    return render_template('screens/admin/manage_category.html', author=author, categories=categories)
+
+@app.route('/admin/categories/new', methods=["GET", "POST"])
+@login_required
+def new_category():
+    user_id = session.get('_id')
+    author = Users.objects(id=user_id).first()
+    
+    form = CategoryForm()
+    
+    if request.method == 'POST':
+        name = form.name.data
+        slug = "-".join(name.lower().split(" "))
+        
+        category_exist = Categories.objects(slug=slug).first()
+        if(category_exist):
+            return render_template('screens/admin/add_category.html', error="Category already exists", author=author, form=form)
+        
+        category = Categories(name=name, slug=slug)
+        category.save()
+        
+        return redirect("/admin/categories")
+    
+    return render_template('screens/admin/add_category.html', author=author, form=form)
+
+# @csrf.exempt
+# @app.route('/category', methods=['GET', 'POST'])
+# def admin_category():
+#     if request.method == 'POST':
+#         category_name = request.json['category']
+#         category_name.lower()
+#         try:
+#             new_category = Categories(name=category_name)
+#             new_category = new_category.save()
+#             return jsonify({
+#                 "status": "success",
+#                 "message": "category created",
+#                 "data" : new_category
+#             })
+#         except:
+#             return {
+#                 "status" : "failed",
+#                 "message": "something went wrong"
+#             }
             
 @app.route('/files/<filename>')
 def uploaded_files(filename):

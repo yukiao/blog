@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Blog | Home</title>
-        
+        <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/vectors/b.svg')}}">
         <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
         <style type="text/tailwindcss">
             @layer utilities {
@@ -53,6 +53,10 @@
                 }
                 #detail-content li{
                     list-style: disc;
+                }
+                #detail-content a{
+                    color: #645ADF;
+                    font-weight: 500;
                 }
             }
         </style>

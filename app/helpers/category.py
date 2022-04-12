@@ -1,8 +1,8 @@
-from app.models import Category
+from app.models import Categories
 
 def getCategoriesPair():
     categories = []
-    query = Category.objects()
+    query = Categories.objects()
     for category in query:
         categories.append((category.id, category.name))
     return categories

@@ -7,7 +7,7 @@ from flask_paginate import Pagination, get_page_parameter
 from flask_ckeditor import upload_success, upload_fail
 from app import app
 from app import bcrypt, csrf
-from app.models import Posts, Tag, User, Category
+from app.models import Posts, Tags, Users, Categories
 from app.forms import LoginForm, PostForm
 from mongoengine.queryset.visitor import Q
 
@@ -61,7 +61,7 @@ def index():
 
     articles = Posts.objects()
     most_viewed = Posts.objects().order_by('-view').limit(5)
-    category = Category.objects()
+    category = Categories.objects()
     
     page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page=5
@@ -76,7 +76,7 @@ def index():
     for article in paginated_articles:
         article.posted_at = get_formatted_date(article.posted_at)
 
-    all_tags = Tag.objects()
+    all_tags = Tags.objects()
 
     pagination = Pagination(page=page, total=len(articles), per_page=5)
     return render_template("screens/index.html", user=user, articles=paginated_articles, most_viewed=most_viewed, category=category, pagination=pagination, all_tags=all_tags)
@@ -105,7 +105,7 @@ def categories():
     
     articles = Posts.objects()
     
-    categories = Category.objects()
+    categories = Categories.objects()
     
     page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page=6
@@ -126,10 +126,10 @@ def categories():
 def categories_detail(category_slug):
     user = get_user()
     
-    category = Category.objects(slug=category_slug).first()
+    category = Categories.objects(slug=category_slug).first()
     articles = Posts.objects(category=category)
     
-    categories = Category.objects()
+    categories = Categories.objects()
     
     page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page=6
@@ -152,7 +152,7 @@ def categories_detail(category_slug):
 def tags():
     user = get_user()
     articles = Posts.objects()
-    tags = Tag.objects()
+    tags = Tags.objects()
     
     page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page=6
@@ -174,14 +174,14 @@ def tags():
 @app.route("/tags/<tag>")
 def tags_detail(tag):
     user = get_user()
-    lookup_tag = Tag.objects(name=tag).first()
+    lookup_tag = Tags.objects(name=tag).first()
 
     if not lookup_tag:
         return redirect('/error')
     
     articles = Posts.objects(tags=lookup_tag)
     
-    tags = Tag.objects()
+    tags = Tags.objects()
     
     page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page=6
@@ -283,7 +283,7 @@ def login():
             username = form.username.data
             raw_pass = form.password.data.encode('utf8')
             
-            user = User.objects(username=username).first()
+            user = Users.objects(username=username).first()
 
             if not user:
                 flash('Account not found')
@@ -306,7 +306,7 @@ def admin_dashboard():
     user_id = session.get('_id')
     total_posts = len(Posts.objects(author=user_id))
     
-    author = User.objects(id = user_id).first()
+    author = Users.objects(id = user_id).first()
     
     pipeline = [
         {
@@ -342,20 +342,20 @@ def new_article():
     if request.method == 'POST':
         if form.validate_on_submit():
             user_id = session.get('_id')
-            author = User.objects(id = user_id).first()
+            author = Users.objects(id = user_id).first()
             
             word_array = form.title.data.strip().lower().split(" ")
             slug = "-".join(word_array)
-            category = Category.objects(id=request.form['category']).first()
+            category = Categories.objects(id=request.form['category']).first()
             
             tags = request.form.getlist('tags[]')
             
             tag_list = []
             
             for tag in tags:
-                tag_exist = Tag.objects(name=tag).first()
+                tag_exist = Tags.objects(name=tag).first()
                 if not tag_exist:
-                    new_tag = Tag(name=tag)
+                    new_tag = Tags(name=tag)
                     new_tag.save()
                     tag_list.append(new_tag)
                 else:
@@ -388,16 +388,16 @@ def edit_article(article_id):
 
             word_array = form.title.data.strip().lower().split(" ")
             slug = "-".join(word_array)
-            category = Category.objects(id=form.category.data).first()
+            category = Categories.objects(id=form.category.data).first()
             
             tags = request.form.getlist('tags[]')
             
             tag_list = []
             
             for tag in tags:
-                tag_exist = Tag.objects(name=tag).first()
+                tag_exist = Tags.objects(name=tag).first()
                 if not tag_exist:
-                    new_tag = Tag(name=tag)
+                    new_tag = Tags(name=tag)
                     new_tag.save()
                     tag_list.append(new_tag)
                 else:
@@ -455,7 +455,7 @@ def admin_category():
         category_name = request.json['category']
         category_name.lower()
         try:
-            new_category = Category(name=category_name)
+            new_category = Categories(name=category_name)
             new_category = new_category.save()
             return jsonify({
                 "status": "success",

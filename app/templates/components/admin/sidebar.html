@@ -34,6 +34,12 @@
         {% else %}
             <li class="text-soft-black"><a href="/admin/categories">Category</a></li>
         {% endif%}
+        <form method="post" action="/logout">
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+            <button type="submit" class="text-purple">
+               Logout
+            </button>
+        </form>
     </ul>
 </div>
 

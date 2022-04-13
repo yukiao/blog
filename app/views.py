@@ -1,7 +1,9 @@
 import json
+import os
 from datetime import timedelta
-from flask import session, flash, redirect, render_template, request, send_from_directory, url_for
+from flask import session, flash, jsonify, redirect, render_template, request, send_from_directory, url_for
 from flask_paginate import Pagination, get_page_parameter
+from flask_ckeditor import upload_success, upload_fail
 from app import app
 from app import bcrypt
 from app.helpers.category import getCategoriesPair
@@ -269,6 +271,18 @@ def about():
     user = get_user()
     return render_template("screens/about.html", user=user)
 
+# @csrf.exempt
+# @app.route("/register", methods=["POST"])
+# def register():
+#     username = request.json['username']
+#     password = request.json['password']
+    
+#     hashed_password = bcrypt.generate_password_hash(password, 10).decode('utf-8')
+
+#     user = User(username=username, password=hashed_password)
+#     res = user.save()
+#     return jsonify(res)
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     
@@ -521,6 +535,43 @@ def new_category():
         return redirect("/admin/categories")
     
     return render_template('screens/admin/add_category.html', author=author, form=form)
+
+# @csrf.exempt
+# @app.route('/category', methods=['GET', 'POST'])
+# def admin_category():
+#     if request.method == 'POST':
+#         category_name = request.json['category']
+#         category_name.lower()
+#         try:
+#             new_category = Categories(name=category_name)
+#             new_category = new_category.save()
+#             return jsonify({
+#                 "status": "success",
+#                 "message": "category created",
+#                 "data" : new_category
+#             })
+#         except:
+#             return {
+#                 "status" : "failed",
+#                 "message": "something went wrong"
+#             }
+            
+@app.route('/files/<filename>')
+def uploaded_files(filename):
+    path="static/images"
+    return send_from_directory(directory=path, path=filename)
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    f = request.files.get('upload')
+    
+    extension = f.filename.split('.')[-1].lower()
+    if extension not in ['jpg','gif', 'png', 'jpeg']:
+        return upload_fail(message="Image only!")
+    
+    f.save(os.path.join('static/images', f.filename))
+    url = url_for('uploaded_files', filename=f.filename)
+    return upload_success(url, f.filename)
 
 @app.route('/logout', methods=['POST'])
 def logout():

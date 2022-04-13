@@ -36,7 +36,7 @@
         {% endif%}
         <form method="post" action="/logout">
             <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
-            <button type="submit" class="text-purple">
+            <button type="submit">
                Logout
             </button>
         </form>

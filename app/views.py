@@ -464,9 +464,7 @@ def delete_post(article_id):
     
     Posts.objects(id=article_id).first().delete()
     
-    posts = Posts.objects(author=user_id)
-    
-    return render_template('screens/admin/post.html', posts=posts)
+    return redirect('/admin/posts')
 
 @app.route('/admin/authors')
 @login_required

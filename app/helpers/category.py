@@ -6,5 +6,4 @@ def getCategoriesPair():
     for category in query:
         categories.append((category.id, category.name))
         
-    print(categories)
     return categories

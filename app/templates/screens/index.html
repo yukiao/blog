@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
     {% with active="home" %}
+    {% include 'components/small_header.html' %}
         {% include "components/header.html" %}
     {% endwith %}
     <main class="w-11/12 md:w-4/5 mx-auto">
         <div class="mt-[96px] py-20">
-            <h1 class="font-bold text-5xl text-active-black text-center">
+            <h1 class="font-bold text-3xl md:text-5xl text-active-black text-center">
                 More Than Just Personal Blog
             </h1>
             <p
-                class="font-medium mt-5 mb-16 text-xl w-4/5 max-w-[720px] mx-auto text-soft-gray text-center"
+                class="font-medium mt-5 mb-16 text-lg md:text-xl w-4/5 max-w-[720px] mx-auto text-soft-gray text-center"
             >
                 We will help you find the things you want. Just go to the search bar
                 below and search for things you want
@@ -36,10 +37,11 @@
                         <h1 class="text-active-black font-bold text-xl md:text-4xl mt-5">
                             {{articles[0].title}}
                         </h1>
-                        <p class="text-soft-gray my-3">
-                            Kamu lagi libur namun tidak tahu ingin kemana? Disini kamu bisa
-                            memperoleh destinasi destinasi wisata untuk mengisi ...
-                        </p>
+                        {% with text = articles[0].content|safe %}
+                        <span class="text-soft-gray mt-3">
+                                {{" ".join((text|safe).split(" ")[:20])|safe + "..."}}
+                        </span>
+                        {% endwith %}
                         <div class="mt-auto">
                             <div class="flex items-center space-x-2 mt-8">
                                 <div class="w-[50px] h-[50px]">

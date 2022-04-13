@@ -1,9 +1,9 @@
 {% extends 'base.html'%}
 {% block content%}
-    <div class="w-screen min-h-screen overflow-x-hidden">
+    <div>
         <div class="flex items-center justify-center h-screen relative">
             {% if next_path %}
-                <form method="post" action={{ "/login?next_path=" ~ next_path}} class="flex-1 flex flex-col items-center justify-center p-10 relative">
+                <form method="post" action={{ "/login?next_path=" ~ next_path}} class="flex-1 flex flex-col items-center justify-center">
                     {% with messages = get_flashed_messages() %}
                         {% if messages %}
                             {% for message in messages %}
@@ -25,7 +25,7 @@
                     </div>
                 </form>
             {% else %}
-                <form method="post" action="/login" class="flex-1 flex flex-col items-center justify-center p-10 relative">
+                <form method="post" action="/login" class="flex-1 flex flex-col items-center justify-center">
                     {% with messages = get_flashed_messages() %}
                         {% if messages %}
                             {% for message in messages %}
@@ -47,7 +47,7 @@
                     </div>
                 </form>
             {% endif %}
-            <div class="flex-1 bg-purple h-full w-full"></div>
+            <div class="flex-1 bg-purple h-full w-full hidden md:block"></div>
         </div>
 
     </div>

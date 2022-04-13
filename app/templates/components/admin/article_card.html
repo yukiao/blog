@@ -17,10 +17,11 @@
         <h1 class="text-active-black font-bold text-xl mt-3">
             {{article.title}}
         </h1>
-        <p class="text-soft-gray mt-3">
-            Kamu lagi libur namun tidak tahu ingin kemana? Disini kamu bisa
-            memperoleh destinasi destinasi wisata untuk mengisi ...
-        </p>
+        {% with text = article.content|safe %}
+        <span class="text-soft-gray mt-3">
+                {{" ".join((text|safe).split(" ")[:20])|safe + "..."}}
+        </span>
+        {% endwith %}
 
         <div class="mt-auto">
 

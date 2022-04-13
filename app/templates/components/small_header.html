@@ -77,9 +77,6 @@
     </ul>
 </div>
 <script>
-    document.addEventListener("click", function(e){
-        console.log(e.target)
-    })
     const hamburger = document.querySelector("#hamburger")
     hamburger.addEventListener('click', function(e){
         document.querySelector("#responsive-sidebar").classList.toggle("hidden")
@@ -95,7 +92,4 @@
     dropdownSmall.addEventListener('click', function(e){
         dropdownMenuSmall.classList.toggle('hidden')
     })
-
-
-
 </script>

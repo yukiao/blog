@@ -1,0 +1,46 @@
+<div class="top-0 bottom-0 flex flex-col left-0 right-0 fixed z-20 bg-[#fff] py-10 hidden" id="responsive-admin-sidebar">
+    <span class="self-end" id="close">
+        <svg width="72" height="72" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21.7735 13.2877L13.2883 21.773C12.9983 22.0629 12.5175 22.0629 12.2276 21.773C11.9377 21.4831 11.9377 21.0023 12.2276 20.7123L20.7129 12.2271C21.0028 11.9372 21.4836 11.9372 21.7735 12.2271C22.0635 12.517 22.0635 12.9978 21.7735 13.2877Z" fill="#292D32"/>
+            <path d="M21.7735 21.7729C21.4836 22.0628 21.0028 22.0628 20.7129 21.7729L12.2276 13.2877C11.9377 12.9977 11.9377 12.5169 12.2276 12.227C12.5175 11.9371 12.9983 11.9371 13.2883 12.227L21.7735 20.7123C22.0635 21.0022 22.0635 21.483 21.7735 21.7729Z" fill="#292D32"/>
+        </svg>
+    </span>
+
+    <a href="/" class="mx-auto my-10">
+        <img src="{{url_for('static', filename='images/vectors/logo.svg')}}" class="h-[72px]" />
+    </a>
+
+    <ul class="flex flex-col space-y-10 items-center"> 
+        {% if active == 'dashboard'%}
+            <li class="font-bold  text-purple">Dashboard</li>
+        {% else %}
+            <li class="text-soft-black"><a href="/admin/dashboard">Dashboard</a></li>
+        {% endif%}
+
+        {% if active == 'posts'%}
+            <li class="font-bold  text-purple">Article</li>
+        {% else %}
+        <li class="text-soft-black"><a href="/admin/posts">Article</a></li>
+        {% endif%}
+
+        {% if active == 'users'%}
+            <li class="font-bold  text-purple">User</li>
+        {% else %}
+            <li class="text-soft-black"><a href="/admin/authors">User</a></li>
+        {% endif%}
+
+        {% if active == 'categories'%}
+            <li class="font-bold  text-purple">Category</li>
+        {% else %}
+            <li class="text-soft-black"><a href="/admin/categories">Category</a></li>
+        {% endif%}
+    </ul>
+</div>
+
+<script>
+    const close = document.querySelector("#close")
+    
+    close.addEventListener('click', function(e){
+        document.querySelector("#responsive-admin-sidebar").classList.toggle("hidden")
+    })
+</script>

@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block title%}
+    <title>Add Category | Blog</title>
+{% endblock %}
 {% block content %}
     <main class="w-full flex">
         <div class="w-20 hidden md:flex fixed h-screen flex-col bg-white border-2 border-[#f7f7f7]">
@@ -65,6 +68,7 @@
         <div class="w-20 hidden md:block"></div>
         <div class="flex-1 px-5 md:px-0">
             {% include 'components/admin/header.html'%}
+            {% include 'components/admin/sidebar.html'%}
             <div class ="w-full md:w-4/5 flex flex-col  mx-auto mt-10">
                 <div class="flex justify-between">
                     <h1 class="font-bold text-2xl text-soft-black">Add New Category</h1>

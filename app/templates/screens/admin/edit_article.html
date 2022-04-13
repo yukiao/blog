@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block title%}
+    <title>Edit Article | Blog</title>
+{% endblock %}
 {% block content %}
     <main class="w-full flex">
         <div class="w-20 hidden md:flex fixed h-screen flex-col bg-white border-2 border-[#f7f7f7]">
@@ -66,6 +69,7 @@
         <div class="w-20 hidden md:block"></div>
         <div class="flex-1 px-5 md:px-0">
             {% include 'components/admin/header.html'%}
+            {% include 'components/admin/sidebar.html'%}
             <div class ="w-full md:w-4/5 flex flex-col  mx-auto mt-10">
                 <form action="/admin/posts/edit/{{article_id}}" method="post" class="flex flex-col pb-10">
                     {{form.csrf_token()}}

@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block title%}
+    <title>{{article.title}} | Blog</title>
+{% endblock %}
 {% block content %}
     {% include "components/header.html" %}
     {% include 'components/small_header.html' %}

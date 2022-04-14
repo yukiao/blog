@@ -1,5 +1,9 @@
 venv/
 __pycache__/
+<<<<<<< HEAD
 .env
 Anggota.txt
 Tugas Projek Kelompok 9 - Basdat 2A.zip
+=======
+.env
+>>>>>>> 23d1be3b4936ee9c01e3be1f5a37b375c0b19475

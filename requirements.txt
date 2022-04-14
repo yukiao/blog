@@ -1,4 +1,6 @@
 bcrypt==3.2.0
+beautifulsoup4==4.11.1
+bs4==0.0.1
 cffi==1.15.0
 click==8.1.2
 dnspython==2.2.1
@@ -20,6 +22,7 @@ pycparser==2.21
 pymongo==4.1.0
 python-dotenv==0.20.0
 six==1.16.0
+soupsieve==2.3.2
 tornado==6.1
 Werkzeug==2.1.1
 WTForms==3.0.1

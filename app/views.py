@@ -365,17 +365,29 @@ def about():
     user = get_user()
     return render_template("screens/about.html", user=user)
 
-# @csrf.exempt
-# @app.route("/register", methods=["POST"])
-# def register():
-#     username = request.json['username']
-#     password = request.json['password']
+@csrf.exempt
+@app.route("/register", methods=["POST"])
+def register():
+    username = request.json['username']
+    password = request.json['password']
     
-#     hashed_password = bcrypt.generate_password_hash(password, 10).decode('utf-8')
+    hashed_password = bcrypt.generate_password_hash(password, 10).decode('utf-8')
 
-#     user = User(username=username, password=hashed_password)
-#     res = user.save()
-#     return jsonify(res)
+    user = Users(username=username, password=hashed_password)
+    res = user.save()
+    return jsonify(res)
+
+@csrf.exempt
+@app.route("/new_category", methods=["POST"])
+def new_category_add():
+    name = request.json['name']
+    slug = request.json['slug']
+    
+    new_category = Categories(name=name, slug=slug)
+    new_category.save()
+    
+    return jsonify(new_category)
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

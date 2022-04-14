@@ -33,7 +33,7 @@
                     {% if screen == "archive" %}
                     <span class="font-medium text-soft-black">By: {{article.author[0]}}</span>
                     {% else %}
-                    <span class="font-medium text-soft-black">By: {{article.author}}</span>
+                    <span class="font-medium text-soft-black">By: {{article.author.name}}</span>
                     {% endif %}
                     <span class="font-medium text-sm text-soft-gray"
                         >{{article.posted_at}}</span

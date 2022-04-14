@@ -503,6 +503,7 @@ def new_article():
 @login_required
 def edit_article(article_id):
     form = PostForm()
+    form.category.choices = getCategoriesPair()
     
     user_id = session.get('_id')
     author = Users.objects(id = user_id).first()

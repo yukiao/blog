@@ -41,8 +41,6 @@ def index():
     
     for article in paginated_articles:
         article.posted_at = get_formatted_date(article.posted_at)
-        
-    print(paginated_articles[1].posted_at)
 
     all_tags = Tags.objects()
 

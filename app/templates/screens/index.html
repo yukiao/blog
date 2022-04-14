@@ -32,7 +32,7 @@
                     </div>
                     <div class="px-5 pb-5">
                         {% if articles[0].tags %}
-                            {% for tag in article.tags%}
+                            {% for tag in articles[0].tags%}
                                 {% include "components/tag.html" %}
                             {% endfor %}
                         {% endif %}
@@ -54,7 +54,7 @@
                                     />
                                 </div>
                                 <div class="flex flex-col space-y-1">
-                                    <span class="font-medium text-soft-black">By: {{articles[0].author.username}}</span>
+                                    <span class="font-medium text-soft-black">By: {{articles[0].author.name}}</span>
                                     <span class="font-medium text-sm text-soft-gray"
                                         >{{articles[0].posted_at}}</span
                                     >

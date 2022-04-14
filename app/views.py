@@ -1,6 +1,7 @@
 import os
 import re
 import json
+from bs4 import BeautifulSoup
 from datetime import timedelta
 from flask import session, flash, redirect, render_template, request, send_from_directory, url_for
 from flask_paginate import Pagination, get_page_parameter
@@ -40,6 +41,8 @@ def index():
     
     for article in paginated_articles:
         article.posted_at = get_formatted_date(article.posted_at)
+        
+    print(paginated_articles[1].posted_at)
 
     all_tags = Tags.objects()
 
@@ -167,7 +170,47 @@ def categories_detail(category_slug):
 def tags():
     user = get_user()
     articles = Posts.objects()
-    tags = Tags.objects()
+    top_tags = Posts.objects().aggregate([
+        {
+            "$unwind": "$tags"
+        },
+        {
+            "$lookup": {
+                "from": "tags",
+                "localField": "tags",
+                "foreignField": "_id",
+                "as": "tags"
+            }
+        },
+        {
+            "$group":{
+                "_id": "$tags.name",
+                "total": {
+                    "$sum": 1
+                }
+            }
+        },
+        {
+            "$sort": {
+                "total": -1
+            }
+        },
+        {
+            "$limit": 10
+        },
+        {
+            "$project": {
+                "name": "$_id",
+            }
+        }
+    ])
+    
+    all_tags = []
+    
+    for tag in top_tags:
+        all_tags.append({
+            "name": tag['name'][0]
+        })
     
     page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page=6
@@ -184,7 +227,7 @@ def tags():
     
     pagination = Pagination(page=page, total=len(articles), per_page=per_page)
     
-    return render_template("screens/tag.html", user=user, articles=paginated_articles, tags=tags, pagination = pagination, )
+    return render_template("screens/tag.html", user=user, articles=paginated_articles, tags=all_tags, pagination = pagination, )
 
 @app.route("/tags/<tag>")
 def tags_detail(tag):
@@ -196,7 +239,47 @@ def tags_detail(tag):
     
     articles = Posts.objects(tags=lookup_tag)
     
-    tags = Tags.objects()
+    top_tags = Posts.objects().aggregate([
+        {
+            "$unwind": "$tags"
+        },
+        {
+            "$lookup": {
+                "from": "tags",
+                "localField": "tags",
+                "foreignField": "_id",
+                "as": "tags"
+            }
+        },
+        {
+            "$group":{
+                "_id": "$tags.name",
+                "total": {
+                    "$sum": 1
+                }
+            }
+        },
+        {
+            "$sort": {
+                "total": -1
+            }
+        },
+        {
+            "$limit": 10
+        },
+        {
+            "$project": {
+                "name": "$_id",
+            }
+        }
+    ])
+    
+    all_tags = []
+    
+    for tag in top_tags:
+        all_tags.append({
+            "name": tag['name'][0]
+        })
     
     page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page=6
@@ -213,7 +296,7 @@ def tags_detail(tag):
     
     pagination = Pagination(page=page, total=len(articles), per_page=per_page)
     
-    return render_template("screens/tag.html", user=user, articles=paginated_articles,  pagination=pagination, tags=tags)
+    return render_template("screens/tag.html", user=user, articles=paginated_articles,  pagination=pagination, tags=all_tags)
 
 @app.route("/archives/<int:year>/<int:month>")
 def archive(year, month):
@@ -221,8 +304,16 @@ def archive(year, month):
     
     pipeline = [
         {
+            "$lookup": {
+                "from": "users",
+                "localField": "author",
+                "foreignField": "_id",
+                "as": "author"
+            }
+        },
+        {
             "$project": {
-                "author": "$author",
+                "author": "$author.name",
                 "title": "$title",
                 "slug": "$slug",
                 "cover": "$cover",
@@ -230,6 +321,7 @@ def archive(year, month):
                 "content": "$content",
                 "view": "$view",
                 "posted_at": "$posted_at",
+                "description": "$description",
                 "year": {
                     "$year": "$posted_at"
                 },
@@ -254,6 +346,7 @@ def archive(year, month):
     for y in year:
         articles.append(y)
         
+    print(articles)
     page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page=6
     
@@ -332,20 +425,6 @@ def admin_dashboard():
     
     author = Users.objects(id = user_id).first()
     
-    pipeline = [
-        {
-            "$match": {"author": author.id}
-        },
-        {
-            "$group": {
-                "_id": 1,
-                "total_views" : {
-                    "$sum": "$view"
-                }
-            }
-        }
-    ]
-    
     total_views = Posts.objects(author = user_id).sum("view")
     
     return render_template('screens/admin/dashboard.html', total_posts=total_posts, total_views=total_views, author=author)
@@ -375,6 +454,10 @@ def new_article():
             slug = "-".join(word_array)
             category = Categories.objects(id=request.form['category']).first()
             
+            soup = BeautifulSoup(form.content.data)
+            description = soup.get_text().replace(u'\xa0', u' ')            
+            description = " ".join(description.split(" ")[:20])
+            
             tags = request.form.getlist('tags[]')
             
             tag_list = []
@@ -393,6 +476,7 @@ def new_article():
                 title=request.form['title'],
                 slug=slug,
                 tags=tag_list,
+                description = description,
                 cover=request.form['cover'],
                 category=category,
                 content=request.form['content'],
@@ -420,6 +504,10 @@ def edit_article(article_id):
             slug = "-".join(word_array)
             category = Categories.objects(id=form.category.data).first()
             
+            soup = BeautifulSoup(form.content.data)
+            description = soup.get_text().replace(u'\xa0', u' ')
+            description = " ".join(description.split(" ")[:20])
+            
             tags = request.form.getlist('tags[]')
             
             tag_list = []
@@ -438,6 +526,7 @@ def edit_article(article_id):
                 "slug": slug,
                 "cover": form.cover.data,
                 "category": category,
+                "description": description,
                 "tags": tag_list,
                 "content": form.content.data,
                 "posted_at": form.postedAt.data

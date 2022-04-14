@@ -16,11 +16,9 @@
                 {% endfor %}
             {% endif %}
         </div>
-        {% with text = article.content|safe %}
-        <span class="text-soft-gray mt-3">
-                {{" ".join((text|safe).split(" ")[:20])|safe + "..."}}
+        <span class="text-soft-gray mt-3 font-normal">
+                {{" ".join(article.description.split(" ")[:20])}} ...
         </span>
-        {% endwith %}
 
         <div class="mt-auto">
             <div class="flex items-center space-x-2 mt-8">
@@ -32,7 +30,11 @@
                     />
                 </div>
                 <div class="flex flex-col space-y-1">
-                    <span class="font-medium text-soft-black">By: {{article.author.username}}</span>
+                    {% if screen == "archive" %}
+                    <span class="font-medium text-soft-black">By: {{article.author[0]}}</span>
+                    {% else %}
+                    <span class="font-medium text-soft-black">By: {{article.author}}</span>
+                    {% endif %}
                     <span class="font-medium text-sm text-soft-gray"
                         >{{article.posted_at}}</span
                     >

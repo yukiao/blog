@@ -20,6 +20,7 @@ class Posts(db.Document):
     slug = db.StringField(required=True, unique=True)
     category = db.ReferenceField(Categories)
     content = db.StringField(required=True)
+    description = db.StringField(required=True)
     view = db.IntField(default=0)
     tags = db.ListField(db.ReferenceField(Tags))
     posted_at = db.DateField(default=date.today())

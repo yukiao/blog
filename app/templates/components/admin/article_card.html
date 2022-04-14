@@ -17,11 +17,9 @@
             {% endif %}
         </div>
 
-        {% with text = article.content|safe %}
         <span class="text-soft-gray mt-3">
-                {{" ".join((text|safe).split(" ")[:20])|safe + "..."}}
+                {{article.description}}...
         </span>
-        {% endwith %}
 
         <div class="mt-auto">
 

@@ -11,8 +11,8 @@ app.config['CKEDITOR_FILE_UPLOADER'] = "upload"
 app.config['CKEDITOR_ENABLE_CSRF'] = True
 app.config['MONGODB_SETTINGS'] = {
     'db': 'blog',
-    'host': '127.0.0.1',
-    'port': 27017
+    'host': 'mongodb+srv://yukiao_blog:yukiao_blog@cluster0.9arzc.mongodb.net/blog?retryWrites=true&w=majority',
+    # 'port': 27017
 }
 
 csrf = CSRFProtect(app)

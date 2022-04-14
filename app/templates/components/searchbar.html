@@ -16,11 +16,27 @@
         </svg>
     </label>
     <input
+        id="search"
         class="text-soft-black px-5 min-w-0 outline-none text-lg bg-transparent flex-1"
         type="text"
         placeholder="Search for article"
     />
-    <button class="bg-purple p-2 px-5 font-bold text-white rounded-md">
+    <button 
+        class="bg-purple p-2 px-5 font-bold text-white rounded-md" 
+        id="search-button">
         Go
     </button>
 </form>
+
+<script>
+    document.querySelector("#search-button").addEventListener('click', e => {
+        e.preventDefault()
+
+        const keyword = document.querySelector("#search").value
+        let url = `/search?keyword=${keyword}`
+        url = encodeURI(url);
+        window.location.href=url
+
+    })
+</script>
+

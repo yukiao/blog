@@ -6,6 +6,9 @@
         />
     </div>
     <div class="flex flex-col h-full px-5 pt-0 pb-5">
+        <h1 class="text-active-black font-bold text-xl mt-3">
+            {{article.title}}
+        </h1>
         <div class="flex flex-wrap">
             {% if article.tags %}
                 {% for tag in article.tags%}
@@ -13,9 +16,6 @@
                 {% endfor %}
             {% endif %}
         </div>
-        <h1 class="text-active-black font-bold text-xl mt-3">
-            {{article.title}}
-        </h1>
         {% with text = article.content|safe %}
         <span class="text-soft-gray mt-3">
                 {{" ".join((text|safe).split(" ")[:20])|safe + "..."}}

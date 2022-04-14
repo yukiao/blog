@@ -1,7 +1,8 @@
-import json
 import os
+import re
+import json
 from datetime import timedelta
-from flask import session, flash, jsonify, redirect, render_template, request, send_from_directory, url_for
+from flask import session, flash, redirect, render_template, request, send_from_directory, url_for
 from flask_paginate import Pagination, get_page_parameter
 from flask_ckeditor import upload_success, upload_fail
 from app import app
@@ -313,6 +314,15 @@ def login():
     else:
         return render_template("screens/login.html", form=form, next_path=next_path)
 
+@app.route("/search")
+def search():
+    keyword = request.args.get("keyword", default="")
+    
+    regex = re.compile(f'.*{keyword}.*', flags=re.IGNORECASE)
+    
+    articles = Posts.objects(title=regex)
+    
+    return render_template('screens/search.html', articles=articles)
 
 @app.route("/admin/dashboard")
 @login_required

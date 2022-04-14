@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title%}
+    <title>Search | Blog</title>
+{% endblock %}
+{% block content %}
+    {% include 'components/header.html'%}
+    {% include 'components/small_header.html' %}
+
+    <main class="w-11/12 lg:w-4/5 mx-auto">
+        <div class="mt-[96px] py-10">
+            {% include "components/searchbar.html" %}
+            <h1 class="font-bold text-4xl text-active-black mt-10">
+                Search Result
+            </h1>
+            
+            <div class="grid grid-cols-fit auto-flow-col  gap-5">
+                {% for article in articles %}
+                    {% include 'components/article_card.html'%}
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+{% endblock %}
